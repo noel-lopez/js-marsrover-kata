@@ -1,4 +1,4 @@
-# MARS ROVER KATA
+# Mars Rover Kata
 
 This repo contains the code written for the [Mars Rover Kata](https://kata-log.rocks/mars-rover-kata/) from [Kata-Log](https://kata-log.rocks/index.html)
 
