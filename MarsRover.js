@@ -1,10 +1,18 @@
 class MarsRover {
-    constructor(location, direction, grid){
+    constructor(location, direction, grid, obstacles) {
         this.location = (location === undefined) ? [0,0] : location;
         this.direction = (direction === undefined) ? 'N' : direction;
         this.grid = (grid === undefined) ? [10, 10] : grid;
+        this.obstacles = (obstacles === undefined) ? [] : obstacles;
         this.directions = ['N', 'E', 'S', 'W'];
         this.instructions = [];
+    }
+
+    // check if newLocation is obstacle from obstacles array
+    isObstacle(newLocation) {
+        return this.obstacles.some(obstacle => {
+            return newLocation[0] === obstacle[0] && newLocation[1] === obstacle[1];
+        });
     }
 
     move(command) {
@@ -22,8 +30,14 @@ class MarsRover {
             xIncrease *= -1;
             yIncrease *= -1;
         }
-        this.location[0] += xIncrease;
-        this.location[1] += yIncrease;
+        var newLocation = [this.location[0] + xIncrease, this.location[1] + yIncrease];
+        if (!this.isObstacle(newLocation)) {
+            this.location = newLocation;
+            return true;
+        } else {
+            console.log('Obstacle encountered at ' + newLocation);
+            return false;
+        }
     }
 
     directionAsNumber = function(direction) {
@@ -42,7 +56,7 @@ class MarsRover {
         this.direction = this.directions[directionNumber];
     }
 
-    resetLocation = function(){
+    wrapEdges = function(){
         this.location = [
             (this.location[0] + this.grid[0]) % this.grid[0],
             (this.location[1] + this.grid[1]) % this.grid[1]
@@ -57,12 +71,15 @@ class MarsRover {
             for (var i = 0; i < c.length; i++) {
                 var command = c[i];
                 if (command === 'f' || command === 'b') {
-                    this.move(command);
+                    if (this.move(command)) {
+                        this.wrapEdges();
+                    } else {
+                        return;
+                    }
                 } else if (command === 'l' || command === 'r'){
                     this.turn(command);
                 }
             }
-            this.resetLocation();
             this.commandsArray = c;
         }
         return 'OK';

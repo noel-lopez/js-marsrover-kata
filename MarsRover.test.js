@@ -123,6 +123,30 @@ describe('marsrover', () => {
         })
     })
 
-    // describe ('Implement obstacle detection before each move to a new square', ()=> {})
+    describe ('Implement obstacle detection before each move to a new square', ()=> {
+        test('should set obstacles array', () => {
+            var mr = new MarsRover([6,9], 'N', [20,20], [[5,5],[5,6],[5,7]]);
+            expect(mr.obstacles).toEqual([[5,5],[5,6],[5,7]]);
+        })
+        test('should use empty obstacles array [] when not assigned', () => {
+            var mr = new MarsRover([6,9], 'N', [20,20]);
+            expect(mr.obstacles).toEqual([]);
+        })
+        test('should return false when no obstacle', ()=>{
+            var mr = new MarsRover([6,9], 'N', [20,20])
+            expect(mr.isObstacle(mr.location)).toBe(false)
+        })
+        test('should return true when obstacle', ()=>{
+            var mr = new MarsRover([6,9], 'N', [20,20])
+            mr.obstacles = [[6,9]]
+            expect(mr.isObstacle(mr.location)).toBe(true)
+        })
+        test('should not move when obstacle', ()=>{
+            var mr = new MarsRover([6,9], 'N', [20,20])
+            mr.obstacles = [[6,8]]
+            mr.commands(['f'])
+            expect(mr.location).toEqual([6,9])
+        })
+    })
 
 })
